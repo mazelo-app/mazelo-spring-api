@@ -12,6 +12,9 @@ public class RestaurantSpecification {
     public Specification<RestaurantEntity> IdIs(Long id) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("id"), id);
     }
+    public Specification<RestaurantEntity> userNameIs(String userName) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("email"), userName);
+    }
 
     public Specification<RestaurantEntity> restaurantNameLike(String text) {
         return ((root, query, criteriaBuilder) -> {

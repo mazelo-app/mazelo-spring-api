@@ -1,8 +1,10 @@
 package com.api.mazelo.controller.auth;
 
+import com.api.mazelo.entity.RestaurantEntity;
 import com.api.mazelo.entity.UserEntity;
 import com.api.mazelo.entity.auth.JwtRequest;
 import com.api.mazelo.exception.UnAuthenticatedException;
+import com.api.mazelo.service.restaurant.RestaurantService;
 import com.api.mazelo.service.user.UserService;
 import com.api.mazelo.utility.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,8 @@ public class JwtAuthenticationController {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-
+    @Autowired
+    private RestaurantService restaurantService;
 
     @Autowired
     private UserService userService;
@@ -34,8 +37,20 @@ public class JwtAuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws UnAuthenticatedException {
         UserEntity user = userService.getUserByUserName(authenticationRequest.getUsername());
+        UserEntity restaurantUser = null;
         if (user == null) {
+            RestaurantEntity restaurant = restaurantService.getRestaurantByUserName(authenticationRequest.getUsername());
+            restaurantUser = UserEntity.builder()
+                    .password(restaurant.getPassword())
+                    .email(restaurant.getEmail())
+                    .roles(restaurant.getRoles())
+                    .id(restaurant.getId()).build();
+        }
+        if (user == null && restaurantUser == null) {
             throw new UnAuthenticatedException("UnAuthenticated!");
+        }
+        if (user == null) {
+            return new ResponseEntity<>(userService.createAuthToken(restaurantUser), HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(userService.createAuthToken(user), HttpStatus.ACCEPTED);
     }

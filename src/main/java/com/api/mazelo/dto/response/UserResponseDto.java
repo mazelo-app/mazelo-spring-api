@@ -14,7 +14,9 @@ public class UserResponseDto {
     private Set<RoleEntity> roles;
     private String email;
     private StatusType status;
-    private String location;
+
+    private String fullAddress;
     private Long pinCode;
+    private String state;
     private String nearByArea;
 }

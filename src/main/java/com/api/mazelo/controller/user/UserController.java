@@ -26,9 +26,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @Operation(summary = "get all restaurants - paginated")
+    @Operation(summary = "get all users - paginated")
     @GetMapping("")
-    @accessForUser
+//    @accessForUser
     public ResponseEntity<?> getAllUsers(@RequestHeader Map<String, String> headers, @RequestParam(defaultValue = "", required = false) StatusType statusType, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("firstName").ascending());
         Page<UserResponseDto> usersList = userService.getAllUsers(pageable, statusType);
@@ -37,7 +37,7 @@ public class UserController {
 
     @Operation(summary = "get user by Id")
     @GetMapping("/{userId}")
-    @accessForUser
+//    @accessForUser
     public ResponseEntity<?> getUserById(@RequestHeader Map<String, String> headers, @PathVariable Long userId) {
         UserResponseDto responseDto = userService.getUserById(userId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -52,7 +52,7 @@ public class UserController {
 
     @Operation(summary = "update user address")
     @PutMapping("/update-address/{userId}")
-    @accessForUser
+//    @accessForUser
     public ResponseEntity<?> updateUserAddress(@RequestHeader Map<String, String> headers,
                                                @PathVariable Long userId,
                                                @RequestBody LocationRequestDto userDto) {
@@ -61,7 +61,7 @@ public class UserController {
 
     @Operation(summary = "delete user by id")
     @DeleteMapping("/{userId}")
-    @accessForAdmin
+//    @accessForAdmin
     public ResponseEntity<?> deleteUser(@RequestHeader Map<String, String> headers, @PathVariable Long userId) {
         userService.deleteUser(userId);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);

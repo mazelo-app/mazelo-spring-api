@@ -44,8 +44,8 @@ public class UserEntity {
     @Column(name = "LAST_NAME", nullable = false)
     private String lastName;
 
-    @Column(name = "LOCATION")
-    private String location;
+    @Column(name = "ADDRESS")
+    private String fullAddress;
 
     @Column(name = "STATE")
     private String state;
@@ -53,7 +53,7 @@ public class UserEntity {
     @Column(name = "PIN_CODE")
     private Long pinCode;
 
-    @Column(name = "ADDRESS")
+    @Column(name = "NEAR_BY_AREA")
     private String nearByArea;
 
     @UpdateTimestamp

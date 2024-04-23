@@ -1,5 +1,6 @@
 package com.api.mazelo.service.restaurant;
 
+import com.api.mazelo.dto.request.LocationRequestDto;
 import com.api.mazelo.dto.request.RestaurantRequestDto;
 import com.api.mazelo.dto.response.RestaurantResponseDto;
 import com.api.mazelo.entity.RestaurantEntity;
@@ -43,5 +44,16 @@ public class RestaurantService {
                 .findById(restaurantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found on :: " + restaurantId));
         restaurantRepository.delete(restaurant);
+    }
+
+    public RestaurantEntity getRestaurantByUserName(String username) {
+        return restaurantRepository.findByEmail(username);
+    }
+
+    public RestaurantResponseDto updateUserRestaurant(LocationRequestDto userDto, Long restaurantId) {
+        RestaurantEntity existingUser = restaurantRepository.findById(restaurantId).orElseThrow(() -> new ResourceNotFoundException("Restaurant not found on :: " + restaurantId));
+        restaurantMapper.mapRestaurantLocationDtoToEntity(userDto, existingUser);
+        RestaurantEntity restaurant = restaurantRepository.save(existingUser);
+        return restaurantMapper.mapToResponseDto(restaurant);
     }
 }

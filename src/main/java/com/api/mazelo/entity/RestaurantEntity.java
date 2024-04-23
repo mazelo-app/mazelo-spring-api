@@ -3,15 +3,14 @@ package com.api.mazelo.entity;
 import com.api.mazelo.converter.StatusTypeConverter;
 import com.api.mazelo.type.StatusType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,10 +19,11 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @Table(name = "RESTAURANT", schema = "mazelodb")
+//Need to do add the restaurant as UserDetails
 public class RestaurantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "RESTAURANT_ID", nullable = false)
+    @Column(name = "USER_ID", nullable = false)
     private Long id;
 
     @Column(name = "NAME", nullable = false)
@@ -67,4 +67,11 @@ public class RestaurantEntity {
     @Column(name = "UPDATED_BY")
     @LastModifiedBy
     private String updatedBy;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "USER_ROLE",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+    @NonNull
+    private Set<RoleEntity> roles = new HashSet<>();
 }
